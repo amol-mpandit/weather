@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Weather APP</title>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+</head>
+<body>
+<div id="forecast">
+<h1>Weather at my location:<span id="location"> </span></h1>
+<div id="imgdiv">
+<img id="img" src=""/>
+</div>
+<p>Temperature: <span id="temp"> </span>F, with <span id="desc"> </span></p>
+<p>Wind: <span id="wind"></span></p>
+</div>
+
+<script>
+
+
+
+function getWeather(){
+
+if (navigator.geolocation) {
+navigator.geolocation.getCurrentPosition(success,error);
+
+}
+else {
+alert('Geolocation is not supported');
+}
+}
+function error() {
+alert("That's weird! We couldn't find you!");
+}
+
+function success(position) {
+		var Geo={};
+		Geo.lat = position.coords.latitude;
+		Geo.lng = position.coords.longitude;
+		var Weather = "http://api.openweathermap.org/data/2.5/weather?lat="+Geo.lat+"&lon="+Geo.lng+"&appid=ca57098eab1df37aed99845aedc06d22";
+		
+		$.ajax({
+			url : Weather,
+			dataType : "json",
+			success : function(data) {
+			
+			var location =data['name']
+			var temp = data["main"]["temp"];
+			var desc = data["weather"][0]["description"];
+			var wind = data["wind"]["speed"];
+
+			//setting the spans to the correct parameters
+			$('#location').html(location);
+			$('#temp').html(temp);
+			$('#desc').html(desc);
+			$('#wind').html(wind);
+			//filling the image src attribute with the image url
+			//$('#img').attr('src', img);
+			}
+			});
+
+		
+}
+
+$(document).ready(function() {
+    getWeather();
+});
+
+</script>
+
+</body>
+</html>
